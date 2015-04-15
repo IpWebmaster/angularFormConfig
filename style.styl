@@ -1,0 +1,171 @@
+@require "../local/libs/styl/main/utilities/variables"
+
+$bs-glyphicons = true
+$bs-panels = true
+$bs-alerts = true
+@require "../local/libs/vendor/bootstrap/stylesheets/index"
+
+.registration
+  padding    0 0 0 12px
+  text-align center
+  list-style none
+
+  &__i
+    display     inline-block
+    width       25%
+    padding     8px
+    margin      0
+    border      2px solid #D7D7D7
+    background  #F9F9F9
+
+    &:nth-of-type(1)
+      margin-left -15px
+
+  &__logo
+    display     block
+    height      239px
+    padding     12px 0
+    gradient-vertical(#005f92, #008ebf)
+    box-shadow  #000 1px 1px 5px
+    color       #fff
+    font-size   20px
+    text-shadow #000 1px 1px 2px
+    &:hover
+      opacity         .8
+      text-decoration none
+
+  &__t
+    padding-top 12px
+
+  &__features
+    display         block
+    padding         5px 15px
+    margin          25px 0 6px
+    border          solid 1px #d7d7d7
+    box-shadow      1px 1px 1px rgba(0,0,0,.75)
+    color           #000
+    font-size       11px!important
+    text-align      center
+    font-weight     700
+    text-decoration none
+    &:hover
+      box-shadow      none
+      text-decoration none
+
+/* Страница регистрации */
+.form-horizontal .checkbox
+  padding-top 0
+
+.form-group--last
+  margin-bottom 0
+
+.form-control
+  height 30px
+
+.reg-form
+  font-size 14px
+
+  &__label
+    font-weight bold
+
+  &__tx-required
+    color #f00
+
+  &__sel-middle
+    margin-top 10px
+
+  &__dm
+    margin       20px 0
+    border-color #eee
+
+  &__lk
+    color $link-blue-color
+
+  &__phone-node-city, &__phone-node-number, &__phone-node-add
+    display inline-block
+
+  &__phone-node-city
+    width   95px
+
+  &__phone-node-number
+    width   130px
+
+  &__phone-node-add
+    width   95px
+
+  &__verifiable
+    &.ng-touched.ng-invalid
+      border 2px solid #fa787e
+
+    &.ng-touched.ng-valid
+      border 2px solid #78fa89
+
+  &__cert-desc
+    position absolute
+    left 145px
+    top 8px
+
+.js-reg-masked
+  position relative
+
+  &::before
+    display          block
+    position         absolute
+    left             0
+    top              -2px
+    z-index          1
+    width            100%
+    height           34px
+    content          ' '
+    opacity          .3
+    background-color black
+
+  &::after
+    display         table-cell
+    position        absolute
+    right           0
+    top             -2px
+    z-index         2
+    width           100%
+    height          34px
+    content         ''
+    color           white
+    text-align      center
+    vertical-align  middle
+    background      url("img/loader.gif") center center no-repeat
+    background-size 5%
+
+.user-messages
+  margin-top   10px
+  padding-left 0
+  list-style   none
+  color        #800000
+
+  &__message
+    position     relative
+    padding-left 15px
+    &::before
+      position absolute
+      content  '\2014'
+      left     0
+
+.gfu-wrap
+  .file-name
+    display block
+    float left
+    padding-top 6px
+  .input-group-addon
+    padding-top 6px
+    display block
+    float left
+  .file-info
+    padding-top 5px
+    padding-bottom 4px
+  .gfu-info
+    margin 0 10px
+  .glyphicon-floppy-remove
+    color #fff
+    padding 2px 0 3px
+
+.has-error .form-control.ng-valid
+  border-color #c5c5c5

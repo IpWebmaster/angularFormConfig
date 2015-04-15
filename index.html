@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Конфигуратор формы - Angular</title>
+</head>
+<body>
+<section id="registration__module" ng-controller="registrationForm as reg" class="reg-supplier">
+    <form id="registration__form"
+          action="#"
+          class="reg-form form-horizontal"
+          role="form"
+          name="user_registration"
+          method="post"
+          rc-submit
+          novalidate>
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <h1>Регистрация</h1>
+
+                <div class="form-group">
+                    <div class="col-xs-offset-3 col-xs-9 text-right">
+                        Поля, отмеченные <span class="reg-form__tx-required"> *</span> обязательны для заполнения
+                    </div>
+                </div>
+
+                <!-- Блок Личной информации -->
+                <div class="form-group">
+                    <div class="col-xs-offset-3 col-xs-9">Информация о лице, регистрирующем компанию</div>
+                </div>
+                <!-- Фамилия -->
+                <div class="form-group"
+                     ng-class="{'has-error': rc.user_registration.needsAttention(user_registration['USER[LAST_NAME]'])}">
+                    <label for="fio-supplier" class="col-xs-3 reg-form__label control-label">Фамилия<span class="reg-form__tx-required"> *</span></label>
+                    <div class="col-xs-9">
+                        <input id="fio-supplier"
+                               class="reg-form__verifiable form-control"
+                               type="text"
+                               name="USER[LAST_NAME]"
+                               value=""
+                               valid-field="'last_name'"
+                               ng-model="dataForm.user.last_name"/>
+                    </div>
+                </div>
+                <!-- /Фамилия -->
+
+                <!-- Имя -->
+                <div class="form-group"
+                     ng-class="{'has-error': rc.user_registration.needsAttention(user_registration['USER[NAME]'])}">
+                    <label for="name-supplier" class="col-xs-3 reg-form__label control-label">Имя<span class="reg-form__tx-required"> *</span></label>
+                    <div class="col-xs-9">
+                        <input id="name-supplier"
+                               class="reg-form__verifiable form-control"
+                               type="text"
+                               name="USER[NAME]"
+                               value=""
+                               ng-trim
+                               valid-field="'name'"
+                               ng-model="dataForm.user.name"/>
+                    </div>
+                </div>
+                <!-- /Имя -->
+
+                <!-- Отчество -->
+                <div class="form-group"
+                     ng-class="{'has-error': rc.user_registration.needsAttention(user_registration['USER[SECOND_NAME]'])}">
+                    <label for="name-middle-supplier" class="col-xs-3 reg-form__label control-label">Отчество</label>
+                    <div class="col-xs-9">
+                        <input id="name-middle-supplier"
+                               class="reg-form__verifiable form-control"
+                               type="text"
+                               name="USER[SECOND_NAME]"
+                               value=""
+                               ng-trim
+                               valid-field="'middle_name'"
+                               ng-model="dataForm.user.middle_name"/>
+                    </div>
+                </div>
+                <!-- Отчество -->
+
+                <!-- Email -->
+                <div class="form-group"
+                     ng-class="{'has-error': rc.user_registration.needsAttention(user_registration['USER[EMAIL]'])}">
+                    <label for="email-supplier" class="col-xs-3 reg-form__label control-label">Адрес электронной почты (логин)<span class="reg-form__tx-required"> *</span></label>
+                    <div class="col-xs-9 ">
+                        <div>
+                            <input id="email-supplier"
+                                   type="email"
+                                   value=""
+                                   class="reg-form__sel-middle reg-form__verifiable form-control"
+                                   name="USER[EMAIL]"
+                                   ng-trim
+                                   autocomplete="off"
+                                   valid-field="'email'"
+                                   ng-model="dataForm.user.email"
+                                   unique-email />
+                        </div>
+                        <ul class="user-messages" ng-show="rc.user_registration.needsAttention(user_registration['USER[EMAIL]'])">
+                            <li ng-show="reg.showError(user_registration['USER[EMAIL]'], 'server')"
+                                class="user-messages__message"
+                                ng-bind-html="dataForm.errors.email">
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- /Email -->
+
+                <!-- Пароль -->
+                <div class="form-group"
+                     ng-class="{'has-error': rc.user_registration.needsAttention(user_registration['USER[PASSWORD]'])}">
+                    <label for="password-supplier" class="col-xs-3 reg-form__label control-label">Пароль<span class="reg-form__tx-required"> *</span></label>
+                    <div class="col-xs-9">
+                        <input id="password-supplier"
+                               type="password"
+                               value=""
+                               class="reg-form__verifiable form-control"
+                               name="USER[PASSWORD]"
+                               ng-trim
+                               autocomplete="off"
+                               valid-field="'password'"
+                               ng-model="dataForm.user.password"/>
+                    </div>
+                </div>
+                <!-- /Пароль -->
+
+                <!-- Подтверждение пароля -->
+                <div class="form-group"
+                     ng-class="{'has-error': rc.user_registration.needsAttention(user_registration['USER[CONFIRM_PASSWORD]'])}">
+                    <label for="password-confirm-supplier" class="col-xs-3 reg-form__label control-label">Подтверждение пароля<span class="reg-form__tx-required"> *</span></label>
+                    <div class="col-xs-9">
+                        <input id="password-confirm-supplier"
+                               type="password"
+                               value=""
+                               class="reg-form__verifiable form-control"
+                               name="USER[CONFIRM_PASSWORD]"
+                               ng-trim
+                               valid-field="'confirm_password'"
+                               autocomplete="off"
+                               ng-model="dataForm.user.confirm_password"
+                               validate-equals="dataForm.user.password"/>
+                        <ul class="user-messages"
+                            ng-show="rc.user_registration.needsAttention(user_registration['USER[CONFIRM_PASSWORD]'])">
+                            <li ng-show="reg.showError(user_registration['USER[CONFIRM_PASSWORD]'], 'equal')"
+                                class="user-messages__message">Подтверждение не совпадает с паролем.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- /Подтверждение пароля -->
+
+                <!-- Телефон -->
+                <div class="form-group"
+                     ng-class="{'has-error': rc.user_registration.needsAttention(user_registration['USER[PHONE][CITY]'])
+                                             || rc.user_registration.needsAttention(user_registration['USER[PHONE][NUMBER]'])
+                                             || rc.user_registration.needsAttention(user_registration['USER[PHONE][ADD]'])}">
+                    <label for="phone-supplier" class="col-xs-3 reg-form__label control-label">Телефон<span class="reg-form__tx-required"> *</span></label>
+                    <div class="col-xs-9">
+                        <span> +7( </span>
+                        <input id="phone-supplier"
+                               type="text"
+                               placeholder="код города"
+                               value=""
+                               class="reg-form__phone-node-city reg-form__verifiable form-control"
+                               name="USER[PHONE][CITY]"
+                               valid-field="'phone_city'"
+                               ng-trim
+                               ng-model="dataForm.user.phone.city"/>
+                        <span> ) </span>
+                        <input type="text"
+                               placeholder="номер телефона"
+                               value=""
+                               class="reg-form__phone-node-number reg-form__verifiable form-control"
+                               name="USER[PHONE][NUMBER]"
+                               valid-field="'phone_number'"
+                               ng-trim
+                               ng-model="dataForm.user.phone.number"/>
+                        <span> добавочный </span>
+                        <input type="text"
+                               placeholder="доб. номер"
+                               value=""
+                               class="reg-form__phone-node-add reg-form__verifiable form-control"
+                               name="USER[PHONE][ADD]"
+                               valid-field="'phone_add'"
+                               ng-trim
+                               ng-model="dataForm.user.phone.add"/>
+                        <input type="hidden"
+                               ng-model="dataForm.user.work_phone"
+                               name="USER[WORK_PHONE]"
+                               ng-attr-value="{{'+7(' + dataForm.user.phone.city+ ')' + dataForm.user.phone.number + ((dataForm.user.phone.add.length)?' доб. '+dataForm.user.phone.add:'')}}"/>
+                        <p><i>Пример: +7 (921) 123-45-67, +7 (812) 123-45-67</i></p>
+                    </div>
+                </div>
+                <!-- /Телефон -->
+
+                <!-- Регистрация на портале -->
+                <div class="form-group">
+                    <div class="col-xs-offset-3 col-xs-9">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="REG_BLOG" value="Y" checked>
+                                Автоматическая регистрация на информационном портале
+                                <a href="http://test.ru/" class="reg-form__lk" target="_blank">www.test.ru</a>
+                                с теми же контактными данными пользователя
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <!-- /Регистрация на портале -->
+                <!-- /Блок Личной информации -->
+                <hr class="reg-form__dm"/>
+
+                <!-- Блок с информацией о организации -->
+                <div class="form-group">
+                    <div class="col-xs-offset-3 col-xs-9">Информация об организации</div>
+                </div>
+
+                <!-- Субъект правв -->
+                <div class="form-group"
+                     ng-class="{'has-error': rc.user_registration.needsAttention(user_registration['ORG[LEGAL_SUBJECT]'])}">
+                    <label for="legal-entity-supplier" class="col-xs-3 reg-form__label control-label">Субъект Права<span class="reg-form__tx-required"> *</span></label>
+                    <div class="col-xs-9">
+                        <select id="legal-entity-supplier"
+                                name="ORG[LEGAL_SUBJECT]"
+                                class="form-control"
+                                ng-model="dataForm.org.legal_subject"
+                                valid-field="'legal_subject'"
+                                select2-init>
+                            <option value="">Выберите...</option>
+                            <option value="LE">Юридическое Лицо</option>
+                            <option value="IB">Индивидуальный предприниматель</option>
+                        </select>
+                    </div>
+                </div>
+                <!-- /Субъект правв -->
+
+                <!-- Организационно Правовая Форма -->
+                <div class="form-group"
+                     ng-class="{'has-error': rc.user_registration.needsAttention(user_registration['ORG[ORG_FORM_ID]'])}">
+                    <label for="legal-form-supplier" class="col-xs-3 reg-form__label control-label">Организационно Правовая Форма<span class="reg-form__tx-required"> *</span></label>
+                    <div class="col-xs-9">
+                        <select id="legal-form-supplier"
+                                name="ORG[ORG_FORM_ID]"
+                                ng-model="dataForm.org.org_form_id"
+                                valid-field="'org_form_id'"
+                                legal-form="dataForm.org.legal_subject"
+                                class="reg-form__sel-middle form-control"
+                                select2-init>
+                            <option value="" selected>Выберите...</option>
+                            <optgroup label="Главные">
+                                <option value="9">Акционерное общество (АО)</option>
+                                <option value="26">Государственное унитарное предприятие субъекта Российской Федерации (ГУПСРФ)</option>
+                                <option value="11">Закрытое акционерное общество (ЗАО)</option>
+                                <option value="27">Муниципальное унитарное предприятие (МУП)</option>
+                                <option value="8">Общество с дополнительной ответственностью (ОДО)</option>
+                                <option value="7">Общество с ограниченной ответственностью (ООО)</option>
+                                <option value="10">Открытое акционерное общество (ОАО)</option>
+                                <option value="18">Производственный кооператив (кроме сельскохозяйственных производственных кооперативов) (ПК)</option>
+                                <option value="97">Территориальное общественное самоуправление (ТСО)</option>
+                                <option value="96">Товарищество собственников жилья (ТСЖ)</option>
+                                <option value="19">Унитарное предприятие (УП)</option>
+                                <option value="20">Унитарное предприятие, основанное на праве оперативного управления (казенное предприятие)</option>
+                                <option value="24">Унитарное предприятие, основанное на праве хозяйственного ведения</option>
+                                <option value="25">Федеральное государственное унитарное предприятие (ФГУП)</option>
+                                <option value="21">Федеральное казенное предприятие (ФКП)</option>
+                                <option value="12">Хозяйственное партнерство (ХП)</option>
+                            </optgroup>
+                            <optgroup label="Дополнительные">
+                                <option value="84">Автономная некоммерческая организация (АНО)</option>
+                                <option value="71">Автономное учреждение (АУ)</option>
+                                <option value="115">Адвокат, учредивший адвокатский кабинет</option>
+                                <option value="67">Адвокатская палата (АП)</option>
+                                <option value="85">Адвокатское бюро (АБ)</option>
+                                <option value="58">Ассоциация (союз)</option>
+                                <option value="59">Ассоциация (союз) экономического взаимодействия субъекта Российской Федерации</option>
+                                <option value="72">Благотворительное учреждение</option>
+                                <option value="53">Благотворительный фонд (БФ)</option>
+                                <option value="73">Бюджетное учреждение (БУ)</option>
+                                <option value="32">Гаражный и гаражно-строительный кооператив (ГГСК)</option>
+                                <option value="112">Глава крестьянского (фермерского) хозяйства</option>
+                                <option value="86">Государственная академия наук (ГАН)</option>
+                                <option value="87">Государственная компания</option>
+                                <option value="88">Государственная корпорация (ГК)</option>
+                                <option value="33">Жилищный и жилищно-строительный кооператив (ЖЖСК)</option>
+                                <option value="34">Жилищный накопительный кооператив (ЖПК)</option>
+                                <option value="113">Индивидуальный предприниматель (ИП)</option>
+                                <option value="98">Иные некоммерческие организации, не включенные в другие группировки</option>
+                                <option value="89">Казачье общество (КО)</option>
+                                <option value="22">Казенное предприятие субъекта Российской Федерации (КПСРФ)</option>
+                                <option value="74">Казенное учреждение (КУ)</option>
+                                <option value="90">Коллегия адвокатов (КА)</option>
+                                <option value="17">Кооперативное хозяйство (коопхоз) (КХ)</option>
+                                <option value="37">Кредитный кооператив второго уровня (ККВУ)</option>
+                                <option value="35">Кредитный потребительский кооператив (КПК)</option>
+                                <option value="36">Кредитный потребительский кооператив граждан (КПКГ)</option>
+                                <option value="28">Крестьянское (фермерское) хозяйство</option>
+                                <option value="108">Межправительственная международная организация (ММО)</option>
+                                <option value="117">Муниципальное автономное учреждение (МАУ)</option>
+                                <option value="23">Муниципальное казенное предприятие (МКП)</option>
+                                <option value="54">Негосударственный пенсионный фонд (НПФ)</option>
+                                <option value="57">Некоммерческое партнерство (НП)</option>
+                                <option value="109">Неправительственная международная организация (НМО)</option>
+                                <option value="68">Нотариальная палата</option>
+                                <option value="116">Нотариус, занимающиеся частной практикой</option>
+                                <option value="102">Обособленное подразделение юридического лица</option>
+                                <option value="46">Общественная организация (объединение) (ОО)</option>
+                                <option value="49">Общественное движение (ОД)</option>
+                                <option value="75">Общественное учреждение (ОУ)</option>
+                                <option value="55">Общественный фонд (ОФ)</option>
+                                <option value="91">Общество взаимного страхования (ОВС)</option>
+                                <option value="92">Община коренного малочисленного народа (ОКМН)</option>
+                                <option value="94">Объединение (союзы) крестьянских (фермерских) хозяйств (ОКХ)</option>
+                                <option value="93">Объединение работодателей (ОР)</option>
+                                <option value="50">Орган общественной самодеятельности (ООС)</option>
+                                <option value="95">Отделение иностраного некоммерческого неправительственного организации (ОИННО)</option>
+                                <option value="104">Паевой инвестиционный фонд (ПИФ)</option>
+                                <option value="66">Палата</option>
+                                <option value="47">Политическая партия (ПП)</option>
+                                <option value="3">Полное товарищество (ПТ)</option>
+                                <option value="31">Потребительский кооператив</option>
+                                <option value="38">Потребительское общество (ПО)</option>
+                                <option value="100">Представительство юридического лица (ПЮЛ)</option>
+                                <option value="13">Производственный кооператив (артель)</option>
+                                <option value="105">Простое товарищество</option>
+                                <option value="48">Профсоюзная организация</option>
+                                <option value="29">Прочие юридические лица, являющиеся коммерческими организациями</option>
+                                <option value="106">Районный суд, городской суд, межрайонный суд (районный суд)</option>
+                                <option value="51">Религиозная организация (РО)</option>
+                                <option value="16">Рыболовецкий артель (колхоз) (РА)</option>
+                                <option value="81">Садоводческий, огороднический или дачний потребительский кооператив</option>
+                                <option value="82">Садоводческое, огородническое или дачное некоммерческое партнерство</option>
+                                <option value="80">Садоводческое, огородническое или дачное некоммерческое товарищество</option>
+                                <option value="15">Сельскохозяйственный артель (колхоз) (СА)</option>
+                                <option value="45">Сельскохозяйственный потребительский животноводческий кооператив</option>
+                                <option value="41">Сельскохозяйственный потребительский обслуживающий кооператив</option>
+                                <option value="44">Сельскохозяйственный потребительский огороднический кооператив</option>
+                                <option value="39">Сельскохозяйственный потребительский перерабатывающий кооператив</option>
+                                <option value="43">Сельскохозяйственный потребительский садоводческий кооператив</option>
+                                <option value="40">Сельскохозяйственный потребительский сбытовый (торговый) кооператив</option>
+                                <option value="42">Сельскохозяйственный потребительский снабженческий кооператив</option>
+                                <option value="14">Сельскохозяйственный производственный кооператив (СПК)</option>
+                                <option value="60">Совет муниципального образования субъекта Российской Федерации (СМОСРФ)</option>
+                                <option value="62">Союз (ассоциация) кооперативов</option>
+                                <option value="61">Союз (ассоциация) кредитных кооперативов</option>
+                                <option value="63">Союз (ассоциация) общественных объединений</option>
+                                <option value="64">Союз (ассоциация) общин малочисленных народов</option>
+                                <option value="65">Союз потребительского общества (СПО)</option>
+                                <option value="103">Структурное подразделение обособленного подразделенияй юридического лица</option>
+                                <option value="4">Товарищество на вере (коммандитное товарищество) (ТВ)</option>
+                                <option value="69">Торгово-промышленная палата (ТПП)</option>
+                                <option value="77">Учреждение академии наук (УАН)</option>
+                                <option value="78">Учреждение религиозной организаций (УРО)</option>
+                                <option value="70">Учреждения</option>
+                                <option value="101">Филиал юридического лица (ФЮЛ)</option>
+                                <option value="52">Фонд</option>
+                                <option value="5">Хозяйственное общество (ХО)</option>
+                                <option value="2">Хозяйственное товарищество (ХТ)</option>
+                                <option value="76">Частное учреждение (ЧУ)</option>
+                                <option value="56">Экологический фонд (ЭФ)</option>
+                                <option value="83">Юридические лица, являющиеся некоммерческими организациями, не включенные в другие группировки</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                </div>
+                <!-- /Организационно Правовая Форма -->
+
+                <!-- ИНН -->
+                <div class="form-group"
+                     ng-class="{'has-error': rc.user_registration.needsAttention(user_registration['ORG[INN]'])}">
+                    <label for="inn-supplier" class="col-xs-3 reg-form__label control-label">ИНН<span class="reg-form__tx-required"> *</span></label>
+                    <div class="col-xs-9">
+                        <input id="inn-supplier"
+                               type="text"
+                               value=""
+                               class="reg-form__verifiable form-control"
+                               name="ORG[INN]"
+                               placeholder="Введите Индивидуальный Номер Налогоплательщика Организации (ИНН). Только ЦИФРЫ."
+                               ng-trim
+                               valid-field="'inn'"
+                               ng-model="dataForm.org.inn"/>
+                    </div>
+                </div>
+                <!-- /ИНН -->
+
+                <!-- КПП -->
+                <div class="form-group"
+                     ng-class="{'has-error': rc.user_registration.needsAttention(user_registration['ORG[KPP]'])}">
+                    <label for="kpp-supplier" class="col-xs-3 reg-form__label control-label">
+                        КПП<span ng-hide="(dataForm.org.legal_subject != 'LE')" class="reg-form__tx-required"> *</span>
+                    </label>
+                    <div class="col-xs-9">
+                        <input id="kpp-supplier"
+                               type="text"
+                               value=""
+                               class="reg-form__verifiable form-control"
+                               name="ORG[KPP]"
+                               placeholder="Введите код причины постановки на учет (КПП). Только ЦИФРЫ."
+                               ng-trim
+                               ng-model="dataForm.org.kpp"
+                               valid-field="'kpp'"/>
+                    </div>
+                </div>
+                <!-- /КПП -->
+
+                <!-- Является ли филиалом -->
+                <div class="form-group">
+                    <div class="col-xs-offset-3 col-xs-9">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox"
+                                       value="0"
+                                       name="ORG[IS_FILIAL]"
+                                       valid-field="'is_filial'"
+                                       ng-model="dataForm.org.is_filial"/>
+                                Организация является филиалом
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <!-- /Является ли филиалом -->
+
+                <!-- Наименование организации -->
+                <div class="form-group"
+                     ng-class="{'has-error': rc.user_registration.needsAttention(user_registration['ORG[FULL_NAME]'])}">
+                    <label for="org-name-supplier" class="col-xs-3 reg-form__label control-label">Наименование организации <span class="reg-form__tx-required">*</span></label>
+                    <div class="col-xs-9">
+                        <input id="org-name-supplier"
+                               type="text"
+                               value=""
+                               class="reg-form__verifiable form-control"
+                               name="ORG[FULL_NAME]"
+                               placeholder="Введите полное наименование организации, включая ОПФ. Не меньше 3 символов."
+                               ng-trim
+                               ng-model="dataForm.org.full_name"
+                               valid-field="'full_name'"/>
+                    </div>
+                </div>
+                <!-- /Наименование организации -->
+
+                <!-- Регион -->
+                <div class="form-group"
+                     ng-class="{'has-error': rc.user_registration.needsAttention(user_registration['ORG[REGION]'])}">
+                    <label for="supplier-region" class="col-xs-3 reg-form__label control-label">Регион<span class="reg-form__tx-required"> *</span></label>
+                    <div class="col-xs-9">
+                        <select id="supplier-region"
+                                name="ORG[REGION]"
+                                class="form-control"
+                                ng-model="dataForm.org.region"
+                                valid-field="'region'"
+                                select2-init>
+                            <option value="">Выберите...</option>
+                            <option value="Адыгея Республика">Адыгея Республика</option>
+                            <option value="Алтай Республика">Алтай Республика</option>
+                            <option value="Алтайский Край">Алтайский Край</option>
+                            <option value="Амурская Область">Амурская Область</option>
+                            <option value="Архангельская Область">Архангельская Область</option>
+                            <option value="Астраханская Область">Астраханская Область</option>
+                            <option value="Байконур Город">Байконур Город</option>
+                            <option value="Башкортостан Республика">Башкортостан Республика</option>
+                            <option value="Белгородская Область">Белгородская Область</option>
+                            <option value="Брянская Область">Брянская Область</option>
+                            <option value="Бурятия Республика">Бурятия Республика</option>
+                            <option value="Владимирская Область">Владимирская Область</option>
+                            <option value="Волгоградская Область">Волгоградская Область</option>
+                            <option value="Вологодская Область">Вологодская Область</option>
+                            <option value="Воронежская Область">Воронежская Область</option>
+                            <option value="Дагестан Республика">Дагестан Республика</option>
+                            <option value="Еврейская Автономная область">Еврейская Автономная область</option>
+                            <option value="Забайкальский Край">Забайкальский Край</option>
+                            <option value="Ивановская Область">Ивановская Область</option>
+                            <option value="Ингушетия Республика">Ингушетия Республика</option>
+                            <option value="Иркутская Область">Иркутская Область</option>
+                            <option value="Кабардино-Балкарская Республика">Кабардино-Балкарская Республика</option>
+                            <option value="Калининградская Область">Калининградская Область</option>
+                            <option value="Калмыкия Республика">Калмыкия Республика</option>
+                            <option value="Калужская Область">Калужская Область</option>
+                            <option value="Камчатский Край">Камчатский Край</option>
+                            <option value="Карачаево-Черкесская Республика">Карачаево-Черкесская Республика</option>
+                            <option value="Карелия Республика">Карелия Республика</option>
+                            <option value="Кемеровская Область">Кемеровская Область</option>
+                            <option value="Кировская Область">Кировская Область</option>
+                            <option value="Коми Республика">Коми Республика</option>
+                            <option value="Костромская Область">Костромская Область</option>
+                            <option value="Краснодарский Край">Краснодарский Край</option>
+                            <option value="Красноярский Край">Красноярский Край</option>
+                            <option value="Крым Республика">Крым Республика</option>
+                            <option value="Курганская Область">Курганская Область</option>
+                            <option value="Курская Область">Курская Область</option>
+                            <option value="Ленинградская Область">Ленинградская Область</option>
+                            <option value="Липецкая Область">Липецкая Область</option>
+                            <option value="Магаданская Область">Магаданская Область</option>
+                            <option value="Марий Эл Республика">Марий Эл Республика</option>
+                            <option value="Мордовия Республика">Мордовия Республика</option>
+                            <option value="Москва Город">Москва Город</option>
+                            <option value="Московская Область">Московская Область</option>
+                            <option value="Мурманская Область">Мурманская Область</option>
+                            <option value="Ненецкий Автономный округ">Ненецкий Автономный округ</option>
+                            <option value="Нижегородская Область">Нижегородская Область</option>
+                            <option value="Новгородская Область">Новгородская Область</option>
+                            <option value="Новосибирская Область">Новосибирская Область</option>
+                            <option value="Омская Область">Омская Область</option>
+                            <option value="Оренбургская Область">Оренбургская Область</option>
+                            <option value="Орловская Область">Орловская Область</option>
+                            <option value="Пензенская Область">Пензенская Область</option>
+                            <option value="Пермский Край">Пермский Край</option>
+                            <option value="Приморский Край">Приморский Край</option>
+                            <option value="Псковская Область">Псковская Область</option>
+                            <option value="Ростовская Область">Ростовская Область</option>
+                            <option value="Рязанская Область">Рязанская Область</option>
+                            <option value="Самарская Область">Самарская Область</option>
+                            <option value="Санкт-Петербург Город">Санкт-Петербург Город</option>
+                            <option value="Саратовская Область">Саратовская Область</option>
+                            <option value="Саха /Якутия/ Республика">Саха /Якутия/ Республика</option>
+                            <option value="Сахалинская Область">Сахалинская Область</option>
+                            <option value="Свердловская Область">Свердловская Область</option>
+                            <option value="Севастополь Город">Севастополь Город</option>
+                            <option value="Северная Осетия - Алания Республика">Северная Осетия - Алания Республика</option>
+                            <option value="Смоленская Область">Смоленская Область</option>
+                            <option value="Ставропольский Край">Ставропольский Край</option>
+                            <option value="Тамбовская Область">Тамбовская Область</option>
+                            <option value="Татарстан Республика">Татарстан Республика</option>
+                            <option value="Тверская Область">Тверская Область</option>
+                            <option value="Томская Область">Томская Область</option>
+                            <option value="Тульская Область">Тульская Область</option>
+                            <option value="Тыва Республика">Тыва Республика</option>
+                            <option value="Тюменская Область">Тюменская Область</option>
+                            <option value="Удмуртская Республика">Удмуртская Республика</option>
+                            <option value="Ульяновская Область">Ульяновская Область</option>
+                            <option value="Хабаровский Край">Хабаровский Край</option>
+                            <option value="Хакасия Республика">Хакасия Республика</option>
+                            <option value="Ханты-Мансийский Автономный округ - Югра Автономный округ">Ханты-Мансийский Автономный округ - Югра Автономный округ</option>
+                            <option value="Челябинская Область">Челябинская Область</option>
+                            <option value="Чеченская Республика">Чеченская Республика</option>
+                            <option value="Чувашская Республика - Чувашия">Чувашская Республика - Чувашия</option>
+                            <option value="Чукотский Автономный округ">Чукотский Автономный округ</option>
+                            <option value="Ямало-Ненецкий Автономный округ">Ямало-Ненецкий Автономный округ</option>
+                            <option value="Ярославская Область">Ярославская Область</option>
+                        </select>
+                    </div>
+                </div>
+                <!-- /Регион -->
+                <!-- /Блок с информацией о организации -->
+            </div>
+            <div class="panel-footer">
+                <div class="form-group form-group--last">
+                    <div class="col-xs-offset-3 col-xs-9">
+                        <button type="submit"
+                                class="btn btn-success"
+                                name="REGISTER-btn"
+                                >Зарегистрироваться
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</section>
+
+<script src="vendor/angular_ie8/angular/angular.min.js"></script>
+<script src="vendor/angular_ie8/angular-resource/angular-resource.min.js"></script>
+<script src="vendor/angular_ie8/angular-sanitize/angular-sanitize.min.js"></script>
+<script src="js/script.js"></script>
+</body>
+</html>
