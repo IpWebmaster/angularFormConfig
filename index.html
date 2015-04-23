@@ -38,8 +38,9 @@
                                type="text"
                                name="USER[LAST_NAME]"
                                value=""
-                               valid-field="'last_name'"
-                               ng-model="dataForm.user.last_name"/>
+                               valid-field
+                               ng-model="dataForm.user.last_name"
+                        />
                     </div>
                 </div>
                 <!-- /Фамилия -->
@@ -55,8 +56,9 @@
                                name="USER[NAME]"
                                value=""
                                ng-trim
-                               valid-field="'name'"
-                               ng-model="dataForm.user.name"/>
+                               valid-field
+                               ng-model="dataForm.user.name"
+                        />
                     </div>
                 </div>
                 <!-- /Имя -->
@@ -72,8 +74,9 @@
                                name="USER[SECOND_NAME]"
                                value=""
                                ng-trim
-                               valid-field="'middle_name'"
-                               ng-model="dataForm.user.middle_name"/>
+                               valid-field
+                               ng-model="dataForm.user.second_name"
+                        />
                     </div>
                 </div>
                 <!-- Отчество -->
@@ -91,9 +94,9 @@
                                    name="USER[EMAIL]"
                                    ng-trim
                                    autocomplete="off"
-                                   valid-field="'email'"
+                                   valid-field
                                    ng-model="dataForm.user.email"
-                                   unique-email />
+                            />
                         </div>
                         <ul class="user-messages" ng-show="rc.user_registration.needsAttention(user_registration['USER[EMAIL]'])">
                             <li ng-show="reg.showError(user_registration['USER[EMAIL]'], 'server')"
@@ -117,8 +120,9 @@
                                name="USER[PASSWORD]"
                                ng-trim
                                autocomplete="off"
-                               valid-field="'password'"
-                               ng-model="dataForm.user.password"/>
+                               valid-field
+                               ng-model="dataForm.user.password"
+                        />
                     </div>
                 </div>
                 <!-- /Пароль -->
@@ -134,10 +138,11 @@
                                class="reg-form__verifiable form-control"
                                name="USER[CONFIRM_PASSWORD]"
                                ng-trim
-                               valid-field="'confirm_password'"
+                               valid-field
                                autocomplete="off"
                                ng-model="dataForm.user.confirm_password"
-                               validate-equals="dataForm.user.password"/>
+                               validate-equals="dataForm.user.password"
+                        />
                         <ul class="user-messages"
                             ng-show="rc.user_registration.needsAttention(user_registration['USER[CONFIRM_PASSWORD]'])">
                             <li ng-show="reg.showError(user_registration['USER[CONFIRM_PASSWORD]'], 'equal')"
@@ -162,27 +167,30 @@
                                value=""
                                class="reg-form__phone-node-city reg-form__verifiable form-control"
                                name="USER[PHONE][CITY]"
-                               valid-field="'phone_city'"
+                               valid-field
                                ng-trim
-                               ng-model="dataForm.user.phone.city"/>
+                               ng-model="dataForm.user.phone.city"
+                        />
                         <span> ) </span>
                         <input type="text"
                                placeholder="номер телефона"
                                value=""
                                class="reg-form__phone-node-number reg-form__verifiable form-control"
                                name="USER[PHONE][NUMBER]"
-                               valid-field="'phone_number'"
+                               valid-field
                                ng-trim
-                               ng-model="dataForm.user.phone.number"/>
+                               ng-model="dataForm.user.phone.number"
+                        />
                         <span> добавочный </span>
                         <input type="text"
                                placeholder="доб. номер"
                                value=""
                                class="reg-form__phone-node-add reg-form__verifiable form-control"
                                name="USER[PHONE][ADD]"
-                               valid-field="'phone_add'"
+                               valid-field
                                ng-trim
-                               ng-model="dataForm.user.phone.add"/>
+                               ng-model="dataForm.user.phone.add"
+                        />
                         <input type="hidden"
                                ng-model="dataForm.user.work_phone"
                                name="USER[WORK_PHONE]"
@@ -223,7 +231,8 @@
                                 name="ORG[LEGAL_SUBJECT]"
                                 class="form-control"
                                 ng-model="dataForm.org.legal_subject"
-                                valid-field="'legal_subject'"
+                                valid-field
+                                ng-disabled="!user_registration['USER[EMAIL]'].$valid"
                                 select2-init>
                             <option value="">Выберите...</option>
                             <option value="LE">Юридическое Лицо</option>
@@ -241,9 +250,10 @@
                         <select id="legal-form-supplier"
                                 name="ORG[ORG_FORM_ID]"
                                 ng-model="dataForm.org.org_form_id"
-                                valid-field="'org_form_id'"
-                                legal-form="dataForm.org.legal_subject"
+                                valid-field
+                                legal-custom-form = "dataForm.org.legal_subject"
                                 class="reg-form__sel-middle form-control"
+                                ng-disabled="!user_registration['USER[EMAIL]'].$valid"
                                 select2-init>
                             <option value="" selected>Выберите...</option>
                             <optgroup label="Главные">
@@ -368,15 +378,26 @@
                      ng-class="{'has-error': rc.user_registration.needsAttention(user_registration['ORG[INN]'])}">
                     <label for="inn-supplier" class="col-xs-3 reg-form__label control-label">ИНН<span class="reg-form__tx-required"> *</span></label>
                     <div class="col-xs-9">
-                        <input id="inn-supplier"
-                               type="text"
-                               value=""
-                               class="reg-form__verifiable form-control"
-                               name="ORG[INN]"
-                               placeholder="Введите Индивидуальный Номер Налогоплательщика Организации (ИНН). Только ЦИФРЫ."
-                               ng-trim
-                               valid-field="'inn'"
-                               ng-model="dataForm.org.inn"/>
+                        <div>
+                            <input id="inn-supplier"
+                                   type="text"
+                                   value=""
+                                   class="reg-form__verifiable form-control"
+                                   name="ORG[INN]"
+                                   placeholder="Введите Индивидуальный Номер Налогоплательщика Организации (ИНН). Только ЦИФРЫ."
+                                   ng-trim
+                                   valid-field="'inn'"
+                                   ng-model="dataForm.org.inn"
+                            />
+                        </div>
+                        <ul class="user-messages" ng-show="rc.user_registration.needsAttention(user_registration['ORG[INN]'])">
+                            <li ng-show="reg.showError(user_registration['ORG[INN]'], 'server')"
+                                class="user-messages__message"
+                                ng-bind-html="dataForm.errors.inn"
+                                    ></li>
+                            <li ng-show="reg.showError(user_registration['ORG[INN]'], 'inn_le')" class="user-messages__message">Поле ИНН должно содержать 10 цифр</li>
+                            <li ng-show="reg.showError(user_registration['ORG[INN]'], 'inn_ib')" class="user-messages__message">Поле ИНН должно содержать 12 цифр</li>
+                        </ul>
                     </div>
                 </div>
                 <!-- /ИНН -->
@@ -388,15 +409,25 @@
                         КПП<span ng-hide="(dataForm.org.legal_subject != 'LE')" class="reg-form__tx-required"> *</span>
                     </label>
                     <div class="col-xs-9">
-                        <input id="kpp-supplier"
-                               type="text"
-                               value=""
-                               class="reg-form__verifiable form-control"
-                               name="ORG[KPP]"
-                               placeholder="Введите код причины постановки на учет (КПП). Только ЦИФРЫ."
-                               ng-trim
-                               ng-model="dataForm.org.kpp"
-                               valid-field="'kpp'"/>
+                        <div>
+                            <input id="kpp-supplier"
+                                   type="text"
+                                   value=""
+                                   class="reg-form__verifiable form-control"
+                                   name="ORG[KPP]"
+                                   placeholder="Введите код причины постановки на учет (КПП). Только ЦИФРЫ."
+                                   ng-trim
+                                   ng-disabled="!user_registration['USER[EMAIL]'].$valid || !user_registration['ORG[LEGAL_SUBJECT]'].$valid"
+                                   ng-required="(dataForm.org.legal_subject == 'LE')"
+                                   ng-model="dataForm.org.kpp"
+                                   kpp-custom-valid="dataForm.org.inn"
+                                   valid-field
+                            />
+                        </div>
+                        <ul class="user-messages" ng-show="rc.user_registration.needsAttention(user_registration['ORG[KPP]'])">
+                            <li ng-show="reg.showError(user_registration['ORG[KPP]'], 'required')" class="user-messages__message">Поле обязательное для заполнения</li>
+                            <li ng-show="reg.showError(user_registration['ORG[KPP]'], 'server')" class="user-messages__message" ng-bind-html="dataForm.errors.kpp"></li>
+                        </ul>
                     </div>
                 </div>
                 <!-- /КПП -->
@@ -409,8 +440,9 @@
                                 <input type="checkbox"
                                        value="0"
                                        name="ORG[IS_FILIAL]"
-                                       valid-field="'is_filial'"
-                                       ng-model="dataForm.org.is_filial"/>
+                                       ng-disabled="!user_registration['USER[EMAIL]'].$valid"
+                                       ng-model="dataForm.org.is_filial"
+                                />
                                 Организация является филиалом
                             </label>
                         </div>
@@ -430,8 +462,10 @@
                                name="ORG[FULL_NAME]"
                                placeholder="Введите полное наименование организации, включая ОПФ. Не меньше 3 символов."
                                ng-trim
+                               ng-disabled="!user_registration['USER[EMAIL]'].$valid || !user_registration['ORG[INN]'].$valid"
                                ng-model="dataForm.org.full_name"
-                               valid-field="'full_name'"/>
+                               valid-field
+                        />
                     </div>
                 </div>
                 <!-- /Наименование организации -->

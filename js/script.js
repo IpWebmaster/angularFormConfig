@@ -1,216 +1,41 @@
 'user strict';
 
+var has = function (obj, key) {
+    return Object.prototype.hasOwnProperty.call(obj, key);
+}
+
 var registration = angular.module('Registration', ['ngSanitize'])
     .config(['$provide', '$httpProvider',
-        function ($provide, $httpProvider){
+        function ($provide, $httpProvider) {
             $httpProvider.defaults.headers.post = {'X-Requested-With': 'XMLHttpRequest'};
-            $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
-            $httpProvider.defaults.transformRequest = function(data) {
-                return angular.isObject( data ) && String( data ) !== '[object File]' ? $.param( data ) : data;
-            };
-            $httpProvider.interceptors.push(['$q', function ($q) {
-                return {
-                    response: function (response) {
-                        if (!response['data'].success) {
-                            var reject = (response['data']) ? response['data'] : response['data']['error'];
-                            return $q.reject(reject);
-                        }
-                        return response['data'];
-                    },
-                    responseError: function (rejection) {
-                        return $q.reject(rejection);
-                    }
-                }
-            }]);
+            $httpProvider.defaults.headers.post['Content-Type'] = 'application/json';
         }]);
 
-/**
- * Константа с конфигом
- */
-registration.constant('configForm', {
-    "user" : {
-        "last_name" : {
-            "validators": {
-                "required": true,
-                "minLength": 2,
-                "maxLength": 40
-            },
-            "errorMsg" : {
-                "required": "Поле обязательное для заполнения",
-                "minLength": "Длина поля <b>Фамилия</b> не должна быть меньше 2 символов",
-                "maxLength": "Длина поля <b>Фамилия</b> не должна превышать 40 символов"
-            }
-        },
-        "name": {
-            "validators": {
-                "required": true,
-                "minLength": 2,
-                "maxLength": 40
-            },
-            "errorMsg" : {
-                "required": "Поле обязательное для заполнения",
-                "minLength": "Длина поля <b>Имя</b> не должна быть меньше 2 символов",
-                "maxLength": "Длина поля <b>Имя</b> не должна превышать 40 символов"
-            }
-        },
-        "middle_name": {
-            "validators": {
-                "minLength": 2,
-                "maxLength": 40
-            },
-            "errorMsg": {
-                "minLength": "Длина поля <b>Отчество</b> не должна быть меньше 2 символов",
-                "maxLength": "Длина поля <b>Отчество</b> не должна превышать 40 символов"
-            }
-        },
-        "email": {
-            "validators": {
-                "required": true,
-                "pattern": /[-\w.]+@([A-z0-9][-A-z0-9]+\.)+[A-z]{2,6}$/
-            },
-            "errorMsg": {
-                "required": "Поле обязательное для заполнения",
-                "pattern": "Введенный <b>Email</b> не корректный. Пример: name@sitename.ru."
-            }
-        },
-        "password": {
-            "validators": {
-                "required": true,
-                "minLength": 6,
-                "pattern": /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z0-9!@#$%]+$/
-            },
-            "errorMsg" : {
-                "required": "Поле обязательное для заполнения",
-                "minLength": "<b>Пароль</b> должен  быть не менее 6 символов длиной",
-                "pattern": "<b>Пароль</b> должен содержать цифры, заглавные и прописные латинские буквы"
-            }
-        },
-        "confirm_password": {
-            "validators": {
-                "required": true
-            },
-            "errorMsg" : {
-                "required": "Поле обязательное для заполнения"
-            }
-        },
-        "phone_city": {
-            "validators": {
-                "required": true,
-                "minLength": 1,
-                "maxLength": 5,
-                "pattern": /[0-9]+$/
-            }
-        },
-        "phone_number": {
-            "validators": {
-                "required": true,
-                "minLength": 5,
-                "maxLength": 10,
-                "pattern": /^([0-9]|[\-])+$/
-            }
-        },
-        "phone_add": {
-            "validators": {
-                "minLength": 1,
-                "maxLength": 6,
-                "pattern": /^[0-9]+$/
-            }
-        }
-    },
-    "org": {
-        "legal_subject": {
-            "disabled": true,
-            "validators": {
-                "required": true
-            },
-            "errorMsg" : {
-                "required": "Поле обязательное для заполнения"
-            }
-        },
-        "org_form_id": {
-            "disabled": true,
-            "validators": {
-                "required": true
-            },
-            "errorMsg" : {
-                "required": "Поле обязательное для заполнения"
-            }
-        },
-        "inn": {
-            "disabled": true,
-            "validators": {
-                "required": true,
-                "pattern": /^\d{10}(\d\d){0,1}$/
-            },
-            "errorMsg" : {
-                "required": "Поле обязательное для заполнения",
-                "pattern": "Поле <b>ИНН</b> должно содержать 10 цифр, ИНН ИП - 12"
-            }
-        },
-        "kpp": {
-            "disabled": true,
-            "validators": {
-                "required": true,
-                "pattern": /^\d{9}$/
-            },
-            "errorMsg" : {
-                "required": "Поле обязательное для заполнения",
-                "pattern": "Поле <b>КПП</b> должно содержать 9 цифр."
-            }
-        },
-        "is_filial": {
-            "disabled": true,
-        },
-        "full_name": {
-            "disabled": true,
-            "validators": {
-                "required": true,
-                "minLength": 3
-            },
-            "errorMsg" : {
-                "required": "Поле обязательное для заполнения",
-                "minLength": "Поле <b>Полное Наименование</b> должно cодержать не менее 3 символов."
-            }
-        },
-        "region": {
-            "disabled": true,
-            "validators": {
-                "required": true
-            },
-            "errorMsg" : {
-                "required": "Поле обязательное для заполнения"
-            }
-        }
-    }
-});
-
-registration.controller('registrationForm', ['$scope', function($scope) {
+registration.controller('registrationForm', ['$scope', function ($scope) {
     $scope.dataForm = {
-        errors: { email: '' }
+        errors: {
+            email: '',
+            inn: '',
+            kpp: ''
+        }
     };
 
-    this.showError = function(ngModelCtrl, error) {
+    this.showError = function (ngModelCtrl, error) {
         return ngModelCtrl.$error[error];
     }
 }]);
 
-registration.directive('validField', ['configForm', function(configForm) {
+registration.directive('validField', ['config', 'checkRequest', function (config, checkRequest) {
     return {
         require: 'ngModel',
         restrict: "A",
-        scope: {
-            property: "=validField",
-            onChangeValue: "&"
-        },
-        compile: function(templateElement, templateAttrs) {
-            var ul, property, config, section,
+        compile: function (templateElement, templateAttrs) {
+            var ul, configField,
                 name = templateAttrs.name;
 
-            property = templateAttrs.validField.substring(1, templateAttrs.validField.length - 1);
-            section = angular.lowercase(name.slice(0, name.indexOf("[")));
-            config = configForm[section][property];
+            configField = config.getConfig(name);
 
-            if(!angular.isUndefined(config.errorMsg) && angular.isObject(config.errorMsg)) {
+            if (!angular.isUndefined(configField.errorMsg) && angular.isObject(configField.errorMsg)) {
                 ul = angular.element('<ul/>', {
                     "class": "user-messages",
                     "ng-show": "rc.user_registration.needsAttention(user_registration['"+ templateAttrs.name +"'])"
@@ -218,103 +43,240 @@ registration.directive('validField', ['configForm', function(configForm) {
 
                 templateElement.after(ul);
 
-                angular.forEach(config.validators, function (val, key) {
+                angular.forEach(configField.errorMsg, function (val, key) {
                     var li = angular.element('<li/>', {
-                        "class": "user-messages__message",
+                        "class": "user-messages__message js-" + key,
                         "ng-show": "reg.showError(user_registration['"+ templateAttrs.name +"'], '" + key + "')",
-                        "html": config.errorMsg[key]
+                        "html": val
                     });
 
                     ul.append(li);
                 });
             }
 
-            /*if(config.disabled) {
+            if (configField.disabled) {
                 templateElement.prop('disabled', 'disabled');
-            }*/
+            }
 
             return {
-                pre: function (scope, el, attrs, ngModelCtrl) {
+                pre: function (scope, element, attrs, ngModelCtrl) {
                     var minLength, maxLength, pattern,
-                        name      = attrs.name,
-                        section   = angular.lowercase(name.slice(0, name.indexOf("["))),
-                        config    = configForm[section][scope.property],
+                        name = attrs.name,
+                        configField = config.getConfig(name),
 
-                        /**
-                         * Валидация по минимальному значению
-                         * @param {String} value Значение введенное пользователем
-                         * @return {String} Возвращает либо валидное значение, либо undefined
-                         */
-                        minLengthValidator = function(value) {
-                            var validity = ngModelCtrl.$isEmpty(value) || value.length >= minLength;
+                        methods = {
+                            /**
+                             * Валидация по минимальному значению
+                             * @param {String} value Значение введенное пользователем
+                             * @return {String} Возвращает либо валидное значение, либо undefined
+                             */
+                            minLengthValidator: function (value) {
+                                var validity = ngModelCtrl.$isEmpty(value) || value.length >= minLength;
 
-                            ngModelCtrl.$setValidity('minLength',  validity);
-                            return validity ? value : undefined;
-                        },
+                                ngModelCtrl.$setValidity('minLength',  validity);
 
-                        /**
-                         * Валидация по максимальному значению
-                         * @param {String} value Значение введенное пользователем
-                         * @return {String} Возвращает либо валидное значение, либо undefined
-                         */
-                        maxLengthValidator = function(value) {
-                            var validity = ngModelCtrl.$isEmpty(value) || value.length <= maxLength;
+                                return validity ? value : undefined;
+                            },
 
-                            ngModelCtrl.$setValidity('maxLength',  validity);
+                            /**
+                             * Валидация по максимальному значению
+                             * @param {String} value Значение введенное пользователем
+                             * @return {String} Возвращает либо валидное значение, либо undefined
+                             */
+                            maxLengthValidator: function (value) {
+                                var validity = ngModelCtrl.$isEmpty(value) || value.length <= maxLength;
 
-                            return validity ? value : undefined;
-                        },
+                                ngModelCtrl.$setValidity('maxLength',  validity);
 
-                        /**
-                         * Валидация по обязательности заполнения поля
-                         * @param {String} value Значение введенное пользователем
-                         * @return {String} Возвращает либо валидное значение, либо undefined
-                         */
-                        requiredValidator = function(value) {
-                            var validity = !ngModelCtrl.$isEmpty(value);
+                                return validity ? value : undefined;
+                            },
 
-                            ngModelCtrl.$setValidity('required', validity);
+                            /**
+                             * Валидация по обязательности заполнения поля
+                             * @param {String} value Значение введенное пользователем
+                             * @return {String} Возвращает либо валидное значение, либо undefined
+                             */
+                            requiredValidator: function (value) {
+                                var validity = !ngModelCtrl.$isEmpty(value);
 
-                            return validity ? value : undefined;
-                        },
+                                ngModelCtrl.$setValidity('required', validity);
 
-                        /**
-                         * Валидация по паттерну
-                         * @param {String} value Значение введенное пользователем
-                         * @return {String} Возвращает либо валидное значение, либо undefined
-                         */
-                        patternValidator = function(value) {
-                            var validity = ngModelCtrl.$isEmpty(value) || pattern.test(value);
+                                return validity ? value : undefined;
+                            },
 
-                            ngModelCtrl.$setValidity('pattern', validity);
+                            /**
+                             * Валидация по паттерну
+                             * @param {String} value Значение введенное пользователем
+                             * @return {String} Возвращает либо валидное значение, либо undefined
+                             */
+                            patternValidator: function (value) {
+                                var regexp = new RegExp(pattern);
+                                var validity = ngModelCtrl.$isEmpty(value) || regexp.test(value);
 
-                            return validity ? value : undefined;
+                                ngModelCtrl.$setValidity('pattern', validity);
+
+                                return validity ? value : undefined;
+                            },
+
+                            /**
+                             * Проверка уникальности Email
+                             * @param {String} value Значение введенное пользователем
+                             * @return {String} Возвращает введенное значение для модели
+                             */
+                            checkUniqueEmail: function (value) {
+                                ngModelCtrl.$setValidity('server', true);
+
+                                if (ngModelCtrl.$valid) {
+                                    var mask = angular.element(element).parent();
+                                    mask.addClass('js-reg-masked');
+
+                                    checkRequest.query({
+                                        'method': 'checkUniqueEmail',
+                                        'params': {
+                                            "USER[EMAIL]": value
+                                        }
+                                    })
+                                        .then(function (data) {
+                                            mask.removeClass('js-reg-masked');
+                                        }, function (data) {
+                                            mask.removeClass('js-reg-masked');
+                                            ngModelCtrl.$setValidity('server', false);
+                                            scope.dataForm.errors.email = data.message;
+                                        });
+                                }
+                                return value;
+                            },
+
+                            /**
+                             * Проверка для поля ИНН
+                             * @param {String} value Значение введенное пользователем
+                             * @return {String} Возвращает введенное значение для модели
+                             */
+                            checkInn: function (value) {
+                                ngModelCtrl.$setValidity('server', true);
+
+                                if (ngModelCtrl.$valid) {
+                                    var mask = angular.element(element).parent();
+                                    mask.addClass('js-reg-masked');
+
+                                    checkRequest.query({
+                                        'method': 'checkInn',
+                                        'params': {
+                                            "ORG[INN]": value
+                                        }
+                                    })
+                                        .then(function (data) {
+                                            mask.removeClass('js-reg-masked');
+                                        }, function (data) {
+                                            mask.removeClass('js-reg-masked');
+                                            ngModelCtrl.$setValidity('server', false);
+                                            scope.dataForm.errors.inn = data.message;
+                                        });
+                                }
+                                return value;
+                            },
+
+                            /**
+                             * Проверка длинны ИНН в зависимости от субъекта права
+                             * @param {String} value Значение введенное пользователем
+                             * @return {String} Возвращает введенное значение для модели
+                             */
+                            checkInnLength: function (value) {
+                                var validity,
+                                    legalSubject = scope.$eval(attrs.innCustomValid),
+                                    pattern = /^\d+$/;
+
+                                if (legalSubject == 'LE') {
+                                    validity = ngModelCtrl.$isEmpty(value) || (value.length == 10 && pattern.test(value));
+
+                                    ngModelCtrl.$setValidity('inn_le',  validity);
+                                    ngModelCtrl.$setValidity('inn_ib',  true);
+                                }
+
+                                if (legalSubject == 'IB') {
+                                    validity = ngModelCtrl.$isEmpty(value) || value.length == 12;
+
+                                    ngModelCtrl.$setValidity('inn_ib',  validity);
+                                    ngModelCtrl.$setValidity('inn_le',  true);
+                                }
+
+                                return value;
+                            },
+
+                            /**
+                             * Проверка для поля КПП
+                             * @param {String} value Значение введенное пользователем
+                             * @return {String} Возвращает введенное значение для модели
+                             */
+                            checkKpp: function (value) {
+                                var inn = scope.$eval(attrs.kppCustomValid),
+                                    isValidInn = scope.user_registration['ORG[INN]'].$valid;
+
+                                ngModelCtrl.$setValidity('server', true);
+
+                                if (ngModelCtrl.$valid && !angular.isUndefined(inn) && isValidInn ) {
+                                    var mask = angular.element(element).parent();
+                                    mask.addClass('js-reg-masked');
+
+                                    checkRequest.query({
+                                        'method': 'checkInn',
+                                        'params': {
+                                            "ORG[INN]": inn,
+                                            "ORG[KPP]": value
+                                        }
+                                    })
+                                        .then(function (data) {
+                                            mask.removeClass('js-reg-masked');
+                                        }, function (data) {
+                                            mask.removeClass('js-reg-masked');
+                                            ngModelCtrl.$setValidity('server', false);
+                                            scope.dataForm.errors.kpp = data.message;
+                                        });
+                                }
+                                return value;
+                            }
                         };
 
-                    if(!angular.isUndefined(config.validators) && angular.isObject(config.validators)) {
-                        angular.forEach(config.validators, function (val, key) {
+
+                    if (!angular.isUndefined(configField.validators) && angular.isObject(configField.validators)) {
+                        angular.forEach(configField.validators, function (val, key) {
                             switch (key) {
                                 case 'required':
-                                    requiredValidator(ngModelCtrl.$viewValue);
-                                    ngModelCtrl.$parsers.push(requiredValidator);
+                                    methods.requiredValidator(ngModelCtrl.$viewValue);
+                                    ngModelCtrl.$parsers.push(methods.requiredValidator);
                                     break;
+
                                 case 'minLength':
-                                    minLength = parseInt(config.validators.minLength, 10) || 0;
-                                    minLengthValidator(ngModelCtrl.$viewValue);
-                                    ngModelCtrl.$parsers.push(minLengthValidator);
+                                    minLength = parseInt(configField.validators.minLength, 10) || 0;
+                                    methods.minLengthValidator(ngModelCtrl.$viewValue);
+                                    ngModelCtrl.$parsers.push(methods.minLengthValidator);
                                     break;
+
                                 case 'maxLength':
-                                    maxLength = parseInt(config.validators.maxLength, 10) || 100;
-                                    maxLengthValidator(ngModelCtrl.$viewValue);
-                                    ngModelCtrl.$parsers.push(maxLengthValidator);
+                                    maxLength = parseInt(configField.validators.maxLength, 10) || 100;
+                                    methods.maxLengthValidator(ngModelCtrl.$viewValue);
+                                    ngModelCtrl.$parsers.push(methods.maxLengthValidator);
                                     break;
+
                                 case 'pattern':
-                                    pattern   = config.validators.pattern;
-                                    patternValidator(ngModelCtrl.$viewValue);
-                                    ngModelCtrl.$parsers.push(patternValidator);
+                                    pattern   = configField.validators.pattern;
+                                    methods.patternValidator(ngModelCtrl.$viewValue);
+                                    ngModelCtrl.$parsers.push(methods.patternValidator);
+                                    break;
+
+                                case 'custom':
+                                    if (angular.isArray(val)) {
+                                        angular.forEach(val, function (name) {
+                                            if (has(methods, name)) {
+                                                methods[name](ngModelCtrl.$viewValue);
+                                                ngModelCtrl.$parsers.push(methods[name]);
+                                            }
+                                        });
+                                    } else {
+                                        throw Error("'custom' is not Array");
+                                    }
                                     break;
                             }
-
                         });
                     }
                 }
@@ -324,85 +286,112 @@ registration.directive('validField', ['configForm', function(configForm) {
 }]);
 
 /**
- * Директива функциональности поля "Организационно Правовая Форма"
+ * Директива проверки КПП
  */
-registration.directive('legalForm', function() {
+registration.directive('kppCustomValid', function () {
     return {
         require: 'ngModel',
-        link: function(scope, el, attrs, ngModelCtrl) {
-            /*if (!attrs.legalSubject) {
-                console.error('legalSubject expects a model as an argument!');
-                return;
+        link: function (scope, element, attrs, ngModelCtrl) {
+            if (!attrs.kppCustomValid) {
+                throw Error('kppCustomValid expects a model as an argument!');
             }
-            scope.$watch(scope.legalSubject, function(value, oldValue) {
-                console.log(value);
-                console.log(oldValue);
-            });*/
+
+            /* Нужно следить за изменением ИНН, чтобы заного запускать метод проверки КПП */
+            scope.$watch(attrs.kppCustomValid, function () {
+                if (!angular.isUndefined(ngModelCtrl.$viewValue)) {
+                    ngModelCtrl.$setViewValue(ngModelCtrl.$viewValue);
+                }
+            });
         }
     };
 });
 
 /**
- * Директива проверки уникальности email
+ * Директива проверки ИНН в зависимости от субъекта права
  */
-registration.directive('uniqueEmail', ['checkRequest', function(checkRequest) {
+registration.directive('innCustomValid', function () {
     return {
         require: 'ngModel',
-        link: function(scope, element, attrs, ngModelCtrl) {
-            ngModelCtrl.$parsers.push(function() {
-                ngModelCtrl.$setValidity('server', true);
+        link: function (scope, element, attrs, ngModelCtrl) {
+            if (!attrs.innCustomValid) {
+                throw Error('innCustomValid expects a model as an argument!');
+            }
 
-                if (ngModelCtrl.$valid) {
-                    var mask = angular.element(element).parent();
-                    mask.addClass('js-reg-masked');
-
-                    checkRequest.query({
-                        'url': 'check_email/',
-                        'data' : {
-                            'USER[EMAIL]': ngModelCtrl.$viewValue
-                        }
-                    }).then(function(json){
-                            mask.removeClass('js-reg-masked');
-                        }
-                        ,function(json){
-                            if(json.error.message.length) {
-                                ngModelCtrl.$setValidity('server', false);
-                                scope.dataForm.errors.email= json.error.message[0];
-                                mask.removeClass('js-reg-masked');
-                            }
-                        });
+            scope.$watch(attrs.innCustomValid, function (value, oldValue) {
+                if (value != oldValue && !angular.isUndefined(ngModelCtrl.$viewValue)) {
+                    ngModelCtrl.$setViewValue(ngModelCtrl.$viewValue);
                 }
-
-                return ngModelCtrl.$viewValue;
             });
         }
     };
-}]);
+});
+
+/**
+ * Директива функциональности поля "Организационно Правовая Форма"
+ */
+registration.directive('legalCustomForm', function() {
+    return {
+        require: 'ngModel',
+        link: function (scope, element, attrs, ngModelCtrl) {
+            if (!attrs.legalCustomForm) {
+                throw Error('legalCustomForm expects a model as an argument!');
+            }
+
+            scope.$watch(attrs.legalCustomForm, function (value) {
+                switch (value) {
+                    case 'IB':
+                        element.select2('readonly', true);
+                        element.select2('val', 113);
+                        ngModelCtrl.$setViewValue(113);
+                        break;
+                    case 'LE':
+                        element.select2('readonly', false);
+                        element.select2('val', false);
+                        ngModelCtrl.$setViewValue("");
+                        break;
+                }
+            });
+        }
+    };
+});
+
+/**
+ * Директива для работы с плагином select2
+ */
+registration.directive('select2Init', function () {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attrs) {
+            element.select2();
+        }
+    };
+});
 
 /**
  * Директива подтверждение пароля
  */
-registration.directive('validateEquals', function() {
+registration.directive('validateEquals', function () {
     return {
         require: 'ngModel',
-        link: function(scope, elm, attrs, ngModelCtrl) {
+        link: function (scope, elm, attrs, ngModelCtrl) {
             if (!attrs.validateEquals) {
-                console.error('validateEquals expects a model as an argument!');
-                return;
+                throw Error("validateEquals expects a model as an argument!");
             }
 
-            function validateEqual(value) {
+            function validateEqual (value) {
                 var validity = (value === scope.$eval(attrs.validateEquals));
 
                 ngModelCtrl.$setValidity('equal', validity);
+
                 return validity ? value: undefined;
             }
 
             ngModelCtrl.$parsers.push(validateEqual);
 
-            scope.$watch(attrs.validateEquals, function() {
-                if(ngModelCtrl.$dirty)
+            scope.$watch(attrs.validateEquals, function () {
+                if (ngModelCtrl.$dirty) {
                     ngModelCtrl.$setViewValue(ngModelCtrl.$viewValue);
+                }
             });
         }
     };
@@ -420,11 +409,11 @@ registration.directive('rcSubmit', ['$parse', function($parse) {
 
             var formController = null;
 
-            this.setAttempted = function() {
+            this.setAttempted = function () {
                 this.attempted = true;
             };
 
-            this.setFormController = function(controller) {
+            this.setFormController = function (controller) {
                 formController = controller;
             };
 
@@ -438,9 +427,9 @@ registration.directive('rcSubmit', ['$parse', function($parse) {
                 }
             };
         }],
-        compile: function(cElement, cAttributes, transclude) {
+        compile: function (cElement, cAttributes, transclude) {
             return {
-                pre: function(scope, formElement, attributes, controllers) {
+                pre: function (scope, formElement, attributes, controllers) {
 
                     var submitController = controllers[0];
                     var formController = (controllers.length > 1) ? controllers[1] : null;
@@ -450,7 +439,7 @@ registration.directive('rcSubmit', ['$parse', function($parse) {
                     scope.rc = scope.rc || {};
                     scope.rc[attributes.name] = submitController;
                 },
-                post: function(scope, formElement, attributes, controllers) {
+                post: function (scope, formElement, attributes, controllers) {
 
                     var submitController = controllers[0];
                     var formController = (controllers.length > 1) ? controllers[1] : null;
@@ -459,11 +448,15 @@ registration.directive('rcSubmit', ['$parse', function($parse) {
                     formElement.bind('submit', function (event) {
 
                         submitController.setAttempted();
-                        if (!scope.$$phase) scope.$apply();
+                        if (!scope.$$phase) {
+                            scope.$apply();
+                        }
 
-                        if (!formController.$valid) return false;
+                        if (!formController.$valid) {
+                            return false;
+                        }
 
-                        scope.$apply(function() {
+                        scope.$apply(function () {
                             fn(scope, {$event:event});
                         });
                     });
@@ -473,13 +466,111 @@ registration.directive('rcSubmit', ['$parse', function($parse) {
     };
 }]);
 
-registration.factory('checkRequest', ['$http', function ($http) {
+/**
+ * Обертка для Ajax запросов по спецификации JSON-RPC 2.0
+ */
+registration.factory('checkRequest', ['$http', '$q', '$log', function ($http, $q, $log) {
     return {
-        query: function(options) {
-            return $http.post(window.location.pathname + '' + options.url, options.data);
+        query: function (options) {
+            var defer = $q.defer();
+
+            $http.post(
+                    '/rpc/',
+                    JSON.stringify({
+                        "jsonrpc": "2.0",
+                        "method": options.method,
+                        "params": options.params,
+                        "id": new Date().getTime()
+                    })
+                )
+                .success(function (data) {
+                    if (has(data, "error")) {
+                        if (data.error.code > -32000 || data.error.code < -32099) {
+                            data.error.message = 'Произошла системная ошибка, свяжитесь с администратором. Код ошибки: ' + data.error.code;
+                        }
+                        defer.reject(data.error);
+                    } else {
+                        defer.resolve(data);
+                    }
+                })
+                .error(function (msg, code) {
+                    $log.error(msg, code);
+                });
+
+            return defer.promise;
         }
     };
 }]);
+
+/**
+ * Получение конфигурационного файла поля формы
+ */
+registration.factory('config', function () {
+    if (!has(window.templateData, "validator")) {
+        throw Error("Object 'templateData' is missing property 'validator'");
+    }
+
+    var configForm = window.templateData.validator;
+
+    return {
+        /**
+         * Возвращает конфиг поля формы
+         * @param {String} name Имя поля формы
+         * @return {Object} Объект с конфигом
+         */
+        getConfig: function (name) {
+            if (angular.isUndefined(name) || !angular.isString(name)) {
+                throw Error("Not specified 'name' from the form fields");
+            }
+
+            this.name = name;
+
+            if (this.name.indexOf("[") == -1) {
+                return configForm[angular.lowercase(this.name)];
+            } else {
+                return this.getConfigField(this.getProperties(), configForm);
+            }
+
+        },
+
+        /**
+         * Парсинг строки имени поля в форме
+         * @return {Array} Массив свойст
+         */
+        getProperties: function () {
+            var arrProperty = [], resultArr = [];
+
+            arrProperty = this.name.split('[');
+
+            resultArr = arrProperty.map(function(prop, index) {
+                if (index > 0) {
+                    prop = prop.slice(0, -1);
+                }
+                return angular.lowercase(prop);
+            });
+
+            return resultArr;
+        },
+
+        /**
+         * Получение конфига формы на основе массива свойств
+         * @param {Array} arrProp Массив свойств
+         * @param {Object} config Имя поля формы
+         * @return {Object} Конфиг поле формы
+         */
+        getConfigField: function (arrProp, config) {
+            for (var i = 0; i < arrProp.length; i++ ) {
+                if (has(config, arrProp[i])) {
+                    config = config[arrProp[i]];
+                }
+            }
+
+            return config;
+        }
+    };
+});
+
+
 
 angular.element(document).ready(function() {
     angular.bootstrap(document.getElementById('registration__module'),['Registration']);

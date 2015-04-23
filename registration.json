@@ -1,0 +1,149 @@
+{
+	"user": {
+		"last_name" : {
+			"validators": {
+				"required": true,
+				"minLength": 2,
+				"maxLength": 40
+			},
+			"errorMsg" : {
+				"required": "Поле обязательное для заполнения",
+				"minLength": "Длина поля <b>Фамилия</b> не должна быть меньше 2 символов",
+				"maxLength": "Длина поля <b>Фамилия</b> не должна превышать 40 символов"
+			}
+		},
+		"name": {
+			"validators": {
+				"required": true,
+				"minLength": 2,
+				"maxLength": 40
+			},
+			"errorMsg" : {
+				"required": "Поле обязательное для заполнения",
+				"minLength": "Длина поля <b>Имя</b> не должна быть меньше 2 символов",
+				"maxLength": "Длина поля <b>Имя</b> не должна превышать 40 символов"
+			}
+		},
+		"second_name": {
+			"validators": {
+				"required": false,
+				"minLength": 2,
+				"maxLength": 40
+			},
+			"errorMsg": {
+				"minLength": "Длина поля <b>Отчество</b> не должна быть меньше 2 символов",
+				"maxLength": "Длина поля <b>Отчество</b> не должна превышать 40 символов"
+			}
+		},
+		"email": {
+			"validators": {
+				"required": true,
+				"pattern": "[-\\w.]+@([A-z0-9][-A-z0-9]+\\.)+[A-z]{2,6}$",
+				"custom": ["validEmail", "checkUniqueEmail"]
+			},
+			"errorMsg": {
+				"required": "Поле обязательное для заполнения",
+				"pattern": "Введенный <b>Email</b> не корректный. Пример: name@sitename.ru."
+			}
+		},
+		"password": {
+			"validators": {
+				"required": true,
+				"minLength": 6,
+				"pattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z0-9!@#$%]+$"
+			},
+			"errorMsg" : {
+				"required": "Поле обязательное для заполнения",
+				"minLength": "<b>Пароль</b> должен  быть не менее 6 символов длиной",
+				"pattern": "<b>Пароль</b> должен содержать цифры, заглавные и прописные латинские буквы"
+			}
+		},
+		"confirm_password": {
+			"validators": {
+				"required": true
+			},
+			"errorMsg" : {
+				"required": "Поле обязательное для заполнения"
+			}
+		},
+		"phone": {
+			"city": {
+				"validators": {
+					"required": true,
+					"minLength": 1,
+					"maxLength": 5,
+					"pattern": "[0-9]+$"
+				}
+			},
+			"number": {
+				"validators": {
+					"required": true,
+					"minLength": 5,
+					"maxLength": 10,
+					"pattern": "^([0-9]|[\\-])+$"
+				}
+			},
+			"add": {
+				"validators": {
+					"minLength": 1,
+					"maxLength": 6,
+					"pattern": "^[0-9]+$"
+				}
+			}
+		}
+	},
+	"org": {
+		"legal_subject": {
+			"validators": {
+				"required": true
+			},
+			"errorMsg" : {
+				"required": "Поле обязательное для заполнения"
+			}
+		},
+		"org_form_id": {
+			"validators": {
+				"required": true
+			},
+			"errorMsg" : {
+				"required": "Поле обязательное для заполнения"
+			}
+		},
+		"inn": {
+			"validators": {
+				"required": true,
+				"custom": ["checkInnLength", "checkInn"]
+			},
+			"errorMsg" : {
+				"required": "Поле обязательное для заполнения"
+			}
+		},
+		"kpp": {
+			"validators": {
+				"pattern": "^\\d{9}$",
+				"custom": ["checkKpp"]
+			},
+			"errorMsg" : {
+				"pattern": "Поле <b>КПП</b> должно содержать 9 цифр."
+			}
+		},
+		"full_name": {
+			"validators": {
+				"required": true,
+				"minLength": 3
+			},
+			"errorMsg" : {
+				"required": "Поле обязательное для заполнения",
+				"minLength": "Поле <b>Полное Наименование</b> должно cодержать не менее 3 символов."
+			}
+		},
+		"region": {
+			"validators": {
+				"required": true
+			},
+			"errorMsg" : {
+				"required": "Поле обязательное для заполнения"
+			}
+		}
+	}
+}
